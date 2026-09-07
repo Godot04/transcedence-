@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battleship Transcendence</title>
+</head>
+<body>
+    <p>Loading...</p>
+    <script>
+        fetch('/api/me')
+            .then((response) => {
+                window.location.href = response.ok
+                    ? '/profile.html'
+                    : '/login.html';
+            })
+            .catch(() => {
+                window.location.href = '/login.html';
+            });
+    </script>
+</body>
+</html>

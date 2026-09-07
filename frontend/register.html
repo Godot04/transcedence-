@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up — Battleship Transcendence</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <main class="auth-container">
+        <section class="auth-card">
+            <div class="auth-header">
+                <p class="eyebrow">FT_TRANSCENDENCE</p>
+                <h1>Battleship</h1>
+                <p class="subtitle">Create your captain account.</p>
+            </div>
+
+            <div class="auth-tabs">
+                <a class="auth-tab" href="/login.html">Login</a>
+                <a class="auth-tab active" href="/register.html">Sign up</a>
+            </div>
+
+            <form id="register-form">
+                <label for="username">Login</label>
+                <input id="username" name="username" type="text"
+                    placeholder="your_login" minlength="3" maxlength="20" required>
+                <small>3–20 characters: letters, numbers and underscores.</small>
+
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email"
+                    placeholder="you@example.com" required>
+
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password"
+                    placeholder="At least 8 characters" minlength="8" required>
+
+                <button type="submit" class="primary-button">Create account</button>
+            </form>
+
+            <div class="separator"><span>OR</span></div>
+
+            <button id="oauth-42-button" class="oauth-button">
+                Continue with 42
+            </button>
+
+            <p id="message" class="message"></p>
+
+            <p class="switch-page">
+                Already have an account?
+                <a href="/login.html">Login</a>
+            </p>
+        </section>
+    </main>
+
+    <script src="/js/auth.js"></script>
+</body>
+</html>

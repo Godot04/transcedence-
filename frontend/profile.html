@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile — Battleship Transcendence</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <main class="profile-container">
+        <header class="site-header">
+            <div>
+                <p class="eyebrow">FT_TRANSCENDENCE</p>
+                <h1>Battleship</h1>
+            </div>
+            <button id="logout-button" class="logout-button">Logout</button>
+        </header>
+
+        <section class="profile-card">
+            <div class="profile-avatar" id="avatar-button">
+                <img id="avatar" src="" alt="Profile avatar">
+                <div id="avatar-placeholder">?</div>
+                <input type="file" id="avatar-input"
+                    accept="image/png,image/jpeg,image/webp" hidden>
+            </div>
+
+            <div class="profile-main">
+                <h2 id="username">Loading...</h2>
+                <p id="email">Loading...</p>
+
+                <div class="rank-info">
+                    <button id="rank-button" class="rank-link" type="button">
+                        <span id="rank-name">Recruit</span>
+                    </button>
+                    <span>•</span>
+                    <span id="mmr">0 MMR</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="info-card">
+            <h2>Account information</h2>
+            <div class="info-row"><span>Login</span><strong id="info-username">—</strong></div>
+            <div class="info-row"><span>Email</span><strong id="info-email">—</strong></div>
+            <div class="info-row"><span>Account ID</span><strong id="info-id">—</strong></div>
+            <div class="info-row"><span>42 account</span><strong id="info-oauth">—</strong></div>
+            <div class="info-row"><span>Joined</span><strong id="info-created">—</strong></div>
+        </section>
+
+        <section class="achievements-card">
+            <h2>Achievements</h2>
+            <div id="achievements-list"></div>
+            <button id="all-achievements-button" class="secondary-button" type="button">
+                View All Achievements
+            </button>
+        </section>
+
+        <section class="coming-soon-card">
+            <p class="eyebrow">CAPTAIN'S NOTES</p>
+            <h2>Main Menu</h2>
+            <p>Battles, matchmaking, tournaments and statistics will be available here.</p>
+            <button disabled class="primary-button">Enter Main Menu</button>
+        </section>
+    </main>
+
+    <div id="mmr-modal" class="modal hidden">
+        <div class="modal-card">
+            <button id="close-mmr" class="modal-close" type="button">×</button>
+            <p class="eyebrow">RANKING SYSTEM</p>
+            <h2>MMR &amp; Ranks</h2>
+            <p>Your matchmaking rating determines your rank.</p>
+            <div id="rank-list"></div>
+        </div>
+    </div>
+
+    <script src="/js/profile.js"></script>
+</body>
+</html>

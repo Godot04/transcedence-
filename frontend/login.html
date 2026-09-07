@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Battleship Transcendence</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <main class="auth-container">
+        <section class="auth-card">
+            <div class="auth-header">
+                <p class="eyebrow">FT_TRANSCENDENCE</p>
+                <h1>Battleship</h1>
+                <p class="subtitle">Welcome back, captain.</p>
+            </div>
+
+            <div class="auth-tabs">
+                <a class="auth-tab active" href="/login.html">Login</a>
+                <a class="auth-tab" href="/register.html">Sign up</a>
+            </div>
+
+            <form id="login-form">
+                <label for="identifier">Login or Email</label>
+                <input id="identifier" name="identifier" type="text"
+                    placeholder="your_login or you@example.com" required>
+
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password"
+                    placeholder="Your password" required>
+
+                <button type="submit" class="primary-button">Login</button>
+            </form>
+
+            <div class="separator"><span>OR</span></div>
+
+            <button id="oauth-42-button" class="oauth-button">
+                Continue with 42
+            </button>
+
+            <p id="message" class="message"></p>
+
+            <p class="switch-page">
+                Don't have an account?
+                <a href="/register.html">Create one</a>
+            </p>
+        </section>
+    </main>
+
+    <script src="/js/auth.js"></script>
+</body>
+</html>
