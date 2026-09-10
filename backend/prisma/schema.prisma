@@ -13,6 +13,7 @@ model User {
   email        String   @unique
   username     String?  @unique
   avatarUrl    String?
+  oauthAvatarUrl String?
   passwordHash String
   mmr          Int      @default(0)
   createdAt    DateTime @default(now())

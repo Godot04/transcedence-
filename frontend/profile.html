@@ -18,12 +18,62 @@
 
         <section class="profile-card">
             <div class="profile-avatar" id="avatar-button">
-                <img id="avatar" src="" alt="Profile avatar">
-                <div id="avatar-placeholder">?</div>
-                <input type="file" id="avatar-input"
-                    accept="image/png,image/jpeg,image/webp" hidden>
+                <img
+                    id="avatar"
+                    src=""
+                    alt="Profile avatar"
+                >
+                <div
+                    id="avatar-placeholder"
+                    class="avatar-placeholder"
+                    aria-hidden="true"
+                >
+                    <svg
+                        viewBox="0 0 100 100"
+                        aria-hidden="true"
+                    >
+                        <circle
+                            cx="50"
+                            cy="50"
+                            r="48"
+                        />
+                        <circle
+                            cx="50"
+                            cy="38"
+                            r="16"
+                            class="placeholder-cutout"
+                        />
+                        <path
+                            d="M22 78 C22 60, 78 60, 78 78 Z"
+                            class="placeholder-cutout"
+                        />
+                    </svg>
+                </div>
+                <button
+                    id="delete-avatar-button"
+                    class="delete-avatar-button"
+                    type="button"
+                    aria-label="Delete profile picture"
+                    title="Delete profile picture"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                    >
+                        <path d="M5 7h14"></path>
+                        <path d="M10 7V4h4v3"></path>
+                        <path d="M8 7l1 13h6l1-13"></path>
+                        <path d="M10 11v6"></path>
+                        <path d="M14 11v6"></path>
+                    </svg>
+                </button>
+                <input
+                    type="file"
+                    id="avatar-input"
+                    accept="image/png,image/jpeg,image/webp"
+                    hidden
+                >
             </div>
-
             <div class="profile-main">
                 <h2 id="username">Loading...</h2>
                 <p id="email">Loading...</p>
@@ -63,6 +113,20 @@
         </section>
     </main>
 
+    <footer class="site-footer">
+
+        <a href="/privacy.html?from=profile">
+            Privacy Policy
+        </a>
+
+        <span>•</span>
+
+        <a href="/terms.html?from=profile">
+            Terms of Service
+        </a>
+
+    </footer>
+
     <div id="mmr-modal" class="modal hidden">
         <div class="modal-card">
             <button id="close-mmr" class="modal-close" type="button">×</button>
@@ -72,7 +136,6 @@
             <div id="rank-list"></div>
         </div>
     </div>
-
     <script src="/js/profile.js"></script>
 </body>
 </html>

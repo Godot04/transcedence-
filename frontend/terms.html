@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Terms of Service — Battleship Transcendence</title>
+
+    <link
+        rel="stylesheet"
+        href="/css/style.css"
+    >
+</head>
+
+<body>
+
+    <main class="profile-container">
+
+        <header class="site-header">
+
+            <div>
+                <p class="eyebrow">FT_TRANSCENDENCE</p>
+                <h1>Battleship</h1>
+            </div>
+
+            <button
+                type="button"
+                class="page-back-link"
+                id="back-button"
+            >
+                ← Back
+            </button>
+
+        </header>
+
+
+        <section class="info-card legal-page">
+
+            <p class="eyebrow">
+                LEGAL DOCUMENT
+            </p>
+
+            <h2>Terms of Service</h2>
+
+            <p>
+                These Terms of Service establish the rules for using
+                Battleship Transcendence and participating in its
+                multiplayer features.
+            </p>
+
+
+            <h3>1. Acceptance of the Terms</h3>
+
+            <p>
+                By creating an account or using the application, you agree
+                to follow these Terms of Service.
+            </p>
+
+
+            <h3>2. User Accounts</h3>
+
+            <p>
+                Users are responsible for providing accurate information
+                when creating an account and for keeping their login
+                credentials secure.
+            </p>
+
+            <p>
+                A user must not intentionally attempt to access another
+                user's account.
+            </p>
+
+
+            <h3>3. Acceptable Use</h3>
+
+            <p>
+                Users must not use the application to:
+            </p>
+
+            <ul>
+                <li>Attack, disrupt or intentionally overload the service</li>
+                <li>Attempt unauthorized access to other accounts</li>
+                <li>Abuse or exploit application vulnerabilities</li>
+                <li>Upload malicious files or harmful content</li>
+                <li>Use automated systems to interfere with normal gameplay</li>
+            </ul>
+
+
+            <h3>4. Multiplayer Games</h3>
+
+            <p>
+                Battleship Transcendence may provide competitive
+                multiplayer gameplay. Users are expected to play fairly
+                and not intentionally exploit bugs or vulnerabilities
+                to obtain an unfair advantage.
+            </p>
+
+
+            <h3>5. Matchmaking Rating</h3>
+
+            <p>
+                Matchmaking rating and rankings are part of the game's
+                progression system. Ratings may change according to the
+                results of completed matches.
+            </p>
+
+
+            <h3>6. Achievements and Progression</h3>
+
+            <p>
+                Achievements and other progression features are provided
+                as part of the application's gameplay experience.
+                Progress may be modified if the application rules or
+                game mechanics are changed.
+            </p>
+
+
+            <h3>7. Uploaded Content</h3>
+
+            <p>
+                Users are responsible for content they upload, including
+                profile pictures. Users must have the necessary rights to
+                use uploaded content.
+            </p>
+
+            <p>
+                Content that violates applicable laws or the rules of the
+                application may be removed.
+            </p>
+
+
+            <h3>8. Service Availability</h3>
+
+            <p>
+                Battleship Transcendence is provided as a software project
+                and may occasionally be unavailable because of maintenance,
+                development work, technical problems or other circumstances.
+            </p>
+
+
+            <h3>9. Suspension and Termination</h3>
+
+            <p>
+                Access to an account may be restricted or terminated if
+                the user seriously violates these Terms of Service or
+                attempts to compromise the security or operation of the
+                application.
+            </p>
+
+
+            <h3>10. Changes to the Terms</h3>
+
+            <p>
+                These Terms of Service may be updated when application
+                functionality, rules or legal requirements change.
+            </p>
+
+
+            <h3>11. Contact</h3>
+
+            <p>
+                Questions regarding these Terms of Service should be
+                directed to the project maintainers through the contact
+                information provided with the project.
+            </p>
+
+        </section>
+
+    </main>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const from = params.get('from');
+
+        const returnPages = 
+        {
+            login: '/login.html',
+            register: '/register.html',
+            profile: '/profile.html',
+        };
+
+        const backButton = document.getElementById('back-button');
+
+        backButton.addEventListener('click', () =>
+        {
+            const returnPage =
+                returnPages[from] || '/login.html';
+
+            window.location.href = returnPage;
+        });
+    </script>
+</body>
+</html>

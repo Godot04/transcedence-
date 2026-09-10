@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Privacy Policy — Battleship Transcendence</title>
+
+    <link
+        rel="stylesheet"
+        href="/css/style.css"
+    >
+</head>
+
+<body>
+
+    <main class="profile-container">
+
+        <header class="site-header">
+
+            <div>
+                <p class="eyebrow">FT_TRANSCENDENCE</p>
+                <h1>Battleship</h1>
+            </div>
+
+            <button
+                type="button"
+                class="page-back-link"
+                id="back-button"
+            >
+                ← Back
+            </button>
+
+        </header>
+
+
+        <section class="info-card legal-page">
+
+            <p class="eyebrow">
+                LEGAL DOCUMENT
+            </p>
+
+            <h2>Privacy Policy</h2>
+
+            <p>
+                This Privacy Policy explains how Battleship Transcendence
+                collects, stores and uses information provided by users
+                of the application.
+            </p>
+
+
+            <h3>1. Information We Collect</h3>
+
+            <p>
+                When you create an account, we may collect:
+            </p>
+
+            <ul>
+                <li>Login / username</li>
+                <li>Email address</li>
+                <li>Password information stored as a secure password hash</li>
+                <li>Profile picture, if you choose to upload one</li>
+                <li>Matchmaking rating and game-related statistics</li>
+                <li>Achievements and account progression</li>
+            </ul>
+
+
+            <h3>2. Authentication Information</h3>
+
+            <p>
+                Passwords are not stored as plain text. The application
+                stores password hashes generated using a salted password
+                hashing mechanism.
+            </p>
+
+            <p>
+                If you use 42 OAuth authentication, information provided
+                by 42 may be used to create or connect your Battleship
+                Transcendence account.
+            </p>
+
+
+            <h3>3. Profile Pictures</h3>
+
+            <p>
+                Users may upload a profile picture voluntarily.
+                Uploaded profile pictures are stored by the application
+                and associated with the corresponding user account.
+            </p>
+
+            <p>
+                Users should only upload images that they have the right
+                to use and that comply with applicable laws and the rules
+                of the application.
+            </p>
+
+
+            <h3>4. How We Use Information</h3>
+
+            <p>
+                Information is used to provide and operate the service,
+                including:
+            </p>
+
+            <ul>
+                <li>Creating and managing user accounts</li>
+                <li>Authenticating users</li>
+                <li>Displaying user profiles</li>
+                <li>Managing matchmaking ratings</li>
+                <li>Tracking achievements and progression</li>
+                <li>Providing multiplayer game functionality</li>
+            </ul>
+
+
+            <h3>5. Data Storage</h3>
+
+            <p>
+                Account information is stored in the application's
+                database. Uploaded files are stored using the application's
+                server-side storage system.
+            </p>
+
+
+            <h3>6. Data Sharing</h3>
+
+            <p>
+                We do not intentionally sell or rent personal account
+                information to third parties.
+            </p>
+
+            <p>
+                Information may be transmitted to external authentication
+                providers when a user explicitly chooses an external
+                authentication method such as 42 OAuth.
+            </p>
+
+
+            <h3>7. Data Security</h3>
+
+            <p>
+                Reasonable technical measures are used to protect account
+                information against unauthorized access. However, no
+                Internet service can guarantee absolute security.
+            </p>
+
+
+            <h3>8. User Rights</h3>
+
+            <p>
+                Users may request information concerning their account
+                data and may request correction or deletion of their
+                account where supported by the application.
+            </p>
+
+
+            <h3>9. Changes to This Policy</h3>
+
+            <p>
+                This Privacy Policy may be updated when the application
+                or its data-processing practices change. Updated versions
+                will be published on this page.
+            </p>
+
+
+            <h3>10. Contact</h3>
+
+            <p>
+                For privacy-related questions, users should contact the
+                project maintainers through the contact information
+                provided with the project.
+            </p>
+
+        </section>
+
+    </main>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const from = params.get('from');
+
+        const returnPages = 
+        {
+            login: '/login.html',
+            register: '/register.html',
+            profile: '/profile.html',
+        };
+
+        const backButton = document.getElementById('back-button');
+
+        backButton.addEventListener('click', () =>
+        {
+            const returnPage =
+                returnPages[from] || '/login.html';
+
+            window.location.href = returnPage;
+        });
+    </script>
+</body>
+</html>

@@ -191,6 +191,7 @@ input::placeholder { color: #999; }
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: 1;
     padding: 5px 0;
     background: rgba(41, 36, 143, 0.85);
     color: white;
@@ -202,6 +203,75 @@ input::placeholder { color: #999; }
 .profile-avatar:hover::after { opacity: 1; }
 #avatar-placeholder { font-family: Georgia, serif; font-size: 3rem; color: var(--ink); }
 #avatar-placeholder.hidden { display: none; }
+
+.delete-avatar-button {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+
+    z-index: 10;
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    border: 2px solid var(--paper);
+    border-radius: 50%;
+
+    background: var(--red);
+    color: white;
+
+    cursor: pointer;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: scale(0.85);
+
+    transition:
+        opacity 0.15s ease,
+        visibility 0.15s ease,
+        transform 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.delete-avatar-button svg {
+    width: 17px;
+    height: 17px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    pointer-events: none;
+}
+
+.profile-avatar.has-avatar:hover .delete-avatar-button,
+.profile-avatar.has-avatar:focus-within .delete-avatar-button {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.delete-avatar-button:hover {
+    background: var(--red-dark);
+    transform: scale(1.08);
+}
+
+.delete-avatar-button:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 2px;
+}
 
 .info-card h2, .achievements-card h2 { margin-top: 0; border-bottom: 2px solid var(--ink); padding-bottom: 10px; }
 .info-row { display: flex; justify-content: space-between; gap: 20px; padding: 13px 0; border-bottom: 1px dashed rgba(41, 36, 143, 0.35); }
@@ -261,4 +331,102 @@ button:disabled { cursor: not-allowed; opacity: 0.45; box-shadow: none; transfor
     .site-header { align-items: flex-start; }
     .site-header h1 { font-size: 2rem; }
     .info-row { flex-direction: column; gap: 3px; }
+}
+
+/* =========================================
+   LEGAL NAVIGATION
+   ========================================= */
+
+.page-back-link {
+    border: none;
+
+    padding: 0;
+
+    background: transparent;
+
+    color: var(--red);
+
+    font: inherit;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.page-back-link:hover {
+    color: var(--red-dark);
+
+    text-decoration: underline;
+}
+
+.site-footer {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 12px;
+
+    margin: 30px 0 20px;
+
+    color: var(--muted);
+
+    font-size: 0.9rem;
+}
+
+.site-footer a {
+    color: var(--ink);
+
+    font-weight: bold;
+
+    text-decoration: none;
+}
+
+.site-footer a:hover {
+    color: var(--red);
+}
+
+
+/* =========================================
+   REGISTRATION PRIVACY CHECKBOX
+   ========================================= */
+
+.privacy-checkbox {
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    margin-top: 8px;
+
+    color: var(--muted);
+
+    font-size: 0.9rem;
+
+    font-weight: normal;
+
+    line-height: 1.5;
+}
+
+.privacy-checkbox input {
+    width: auto;
+
+    margin-top: 4px;
+
+    flex-shrink: 0;
+
+    border: none;
+}
+
+.privacy-checkbox a {
+    color: var(--ink);
+
+    font-weight: bold;
+}
+
+.privacy-checkbox a:hover {
+    color: var(--red);
 }

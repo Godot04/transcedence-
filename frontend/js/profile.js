@@ -18,6 +18,7 @@ const rankList = document.getElementById('rank-list');
 const achievementsList = document.getElementById('achievements-list');
 const allAchievementsButton = document.getElementById('all-achievements-button');
 const rankButton = document.getElementById('rank-button');
+const deleteAvatarButton = document.getElementById('delete-avatar-button');
 
 const ranks = [
     { name: 'Recruit', mmr: 0 },
@@ -29,6 +30,11 @@ const ranks = [
     { name: 'Lieutenant', mmr: 1500 },
     { name: 'Commander', mmr: 2000 },
 ];
+
+function updateAvatarState(hasAvatar)
+{
+    avatarButton.classList.toggle('has-avatar', hasAvatar);
+}
 
 function readFileAsDataURL(file)
 {
@@ -42,8 +48,10 @@ function readFileAsDataURL(file)
     });
 }
 
-avatarButton.addEventListener('click', () =>
+avatarButton.addEventListener('click', (event) =>
 {
+    if (event.target.closest('#delete-avatar-button'))
+        return;
     avatarInput.click();
 });
 
@@ -96,6 +104,7 @@ avatarInput.addEventListener('change', async () =>
         avatarElement.src = `${data.avatarUrl}?t=${Date.now()}`;
         avatarElement.classList.add('visible');
         avatarPlaceholder.classList.add('hidden');
+        updateAvatarState(true);
     }
     catch (error)
     {
@@ -105,6 +114,69 @@ avatarInput.addEventListener('change', async () =>
     finally
     {
         avatarInput.value = '';
+    }
+});
+
+deleteAvatarButton.addEventListener('click', async (event) =>
+{
+    event.stopPropagation();
+
+    const confirmed =
+        window.confirm('Delete your profile picture?');
+
+    if (!confirmed)
+        return;
+
+    try
+    {
+        const response = await fetch('/api/me/avatar',
+        {
+            method: 'DELETE',
+        });
+
+        const type =
+            response.headers.get('content-type') || '';
+
+        const data =
+            type.includes('application/json')
+                ? await response.json()
+                : {};
+
+        if (!response.ok)
+        {
+            throw new Error(
+                data.error ||
+                `Server returned HTTP ${response.status}`
+            );
+        }
+
+        if (data.avatarUrl)
+        {
+            avatarElement.src =
+                `${data.avatarUrl}?t=${Date.now()}`;
+
+            avatarElement.classList.add('visible');
+            avatarPlaceholder.classList.add('hidden');
+        }
+        else
+        {
+            avatarElement.removeAttribute('src');
+            avatarElement.classList.remove('visible');
+
+            avatarPlaceholder.classList.remove('hidden');
+        }
+    }
+    catch (error)
+    {
+        console.error(
+            'Failed to delete avatar:',
+            error
+        );
+
+        alert(
+            error.message ||
+            'Failed to delete profile picture.'
+        );
     }
 });
 
@@ -293,14 +365,14 @@ async function loadProfile()
             avatarElement.src = `${user.avatarUrl}?t=${Date.now()}`;
             avatarElement.classList.add('visible');
             avatarPlaceholder.classList.add('hidden');
+            updateAvatarState(true);
         }
         else
         {
+            avatarElement.removeAttribute('src');
             avatarElement.classList.remove('visible');
             avatarPlaceholder.classList.remove('hidden');
-            avatarPlaceholder.textContent = (user.username || '?')
-                .charAt(0)
-                .toUpperCase();
+            updateAvatarState(false);
         }
     }
     catch (error)

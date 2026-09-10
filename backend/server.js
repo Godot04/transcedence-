@@ -130,6 +130,22 @@ function parseCookies(cookieHeader) {
     }, {});
 }
 
+function appendCookie(res, cookie) {
+  const existing = res.getHeader('Set-Cookie');
+
+  if (!existing) {
+    res.setHeader('Set-Cookie', [cookie]);
+    return;
+  }
+
+  if (Array.isArray(existing)) {
+    res.setHeader('Set-Cookie', [...existing, cookie]);
+    return;
+  }
+
+  res.setHeader('Set-Cookie', [existing, cookie]);
+}
+
 function setSessionCookie(res, token) {
   const cookieParts = [
     `${sessionCookieName}=${token}`,
@@ -142,7 +158,7 @@ function setSessionCookie(res, token) {
     cookieParts.push('Secure');
   }
 
-  res.setHeader('Set-Cookie', cookieParts.join('; '));
+  appendCookie(res, cookieParts.join('; '));
 }
 
 function clearSessionCookie(res) {
@@ -172,8 +188,8 @@ function setOAuthStateCookie(res, state) {
 }
 
 function clearOAuthStateCookie(res) {
-  res.setHeader(
-    'Set-Cookie',
+  appendCookie(
+    res,
     'transcendence_oauth_state=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0',
   );
 }
@@ -243,6 +259,7 @@ async function getCurrentUser(req) {
       email: true,
       username: true,
       avatarUrl: true,
+      oauthAvatarUrl: true,
       mmr: true,
       createdAt: true,
     },
@@ -585,6 +602,7 @@ async function handle42Callback(req, res) {
           oauth42Id,
           email,
           username,
+          oauthAvatarUrl,
           // Keep a locally uploaded avatar if the user already has one.
         },
       });
@@ -595,6 +613,7 @@ async function handle42Callback(req, res) {
           email,
           username,
           avatarUrl: oauthAvatarUrl,
+          oauthAvatarUrl,
           passwordHash: hashPassword(crypto.randomBytes(16).toString('hex')),
         },
       });
@@ -666,6 +685,52 @@ async function handleAvatar(req, res) {
 
   res.writeHead(404);
   res.end('Avatar not found');
+}
+
+async function handleAvatarDelete(req, res) {
+  const user = await getCurrentUser(req);
+
+  if (!user) {
+    return sendJson(res, 401, {
+      error: 'Not authenticated',
+    });
+  }
+
+  const extensions = ['png', 'jpg', 'webp'];
+
+  try {
+    for (const extension of extensions) {
+      const filePath = path.join(
+        avatarDirectory,
+        `${user.id}.${extension}`,
+      );
+
+      try {
+        await fs.promises.unlink(filePath);
+      } catch (error) {
+        if (error.code !== 'ENOENT') {
+          throw error;
+        }
+      }
+    }
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        avatarUrl: user.oauthAvatarUrl || null,
+      },
+    });
+
+    return sendJson(res, 200, {
+      message: 'Avatar deleted successfully',
+      avatarUrl: user.oauthAvatarUrl || null,
+    });
+  } catch (error) {
+    console.error('Failed to delete avatar:', error);
+    return sendJson(res, 500, {
+      error: 'Could not delete avatar',
+    });
+  }
 }
 
 async function handleAvatarUpload(req, res) {
@@ -752,11 +817,19 @@ async function handleAvatarUpload(req, res) {
   }
 }
 
-async function requestHandler(req, res) {
+async function requestHandler(req, res) 
+{
   const url = new URL(req.url, `http://${req.headers.host}`);
 
-  if (req.method === 'GET' && url.pathname === '/api/health') {
-    return sendJson(res, 200, {
+  if (req.method === 'DELETE' && url.pathname === '/api/me/avatar') 
+  {
+    return handleAvatarDelete(req, res);
+  }
+
+  if (req.method === 'GET' && url.pathname === '/api/health') 
+  {
+    return sendJson(res, 200, 
+    {
       status: 'ok',
       service: 'backend',
       port,
