@@ -11,27 +11,27 @@ const achievements = [
   {
     name: 'Fresh Meat',
     description: 'Welcome to the battlefield, captain.',
-    iconUrl: '/icons/achievements/fresh-meat.svg',
+    iconUrl: '/icons/achievements/fresh-meat.png',
   },
   {
     name: 'First Blood',
-    description: 'Win your first battle.',
-    iconUrl: '/icons/achievements/first-blood.svg',
+    description: 'Destroy your first enemy ship.',
+    iconUrl: '/icons/achievements/first-blood.png',
   },
   {
     name: 'Sea Dog',
     description: 'Win 10 battles.',
-    iconUrl: '/icons/achievements/sea-dog.svg',
+    iconUrl: '/icons/achievements/sea-dog.png',
   },
   {
     name: 'Destroyer',
     description: 'Destroy the entire enemy fleet.',
-    iconUrl: '/icons/achievements/destroyer.svg',
+    iconUrl: '/icons/achievements/destroyer.png',
   },
   {
     name: 'Untouchable',
     description: 'Win a battle without losing a ship.',
-    iconUrl: '/icons/achievements/untouchable.svg',
+    iconUrl: '/icons/achievements/untouchable.png',
   },
 ];
 
@@ -154,7 +154,8 @@ function setSessionCookie(res, token) {
     'SameSite=Lax',
   ];
 
-  if (process.env.NODE_ENV === 'production') {
+  if (frontendUrl.startsWith('https://')) 
+  {
     cookieParts.push('Secure');
   }
 
@@ -180,7 +181,8 @@ function setOAuthStateCookie(res, state) {
     'SameSite=Lax',
   ];
 
-  if (process.env.NODE_ENV === 'production') {
+  if (frontendUrl.startsWith('https://')) 
+  {
     cookieParts.push('Secure');
   }
 
@@ -254,14 +256,15 @@ async function getCurrentUser(req) {
   return prisma.user.findUnique({
     where: { id: session.userId },
     select: {
-      id: true,
-      oauth42Id: true,
-      email: true,
-      username: true,
-      avatarUrl: true,
-      oauthAvatarUrl: true,
-      mmr: true,
-      createdAt: true,
+        id: true,
+        oauth42Id: true,
+        email: true,
+        username: true,
+        avatarUrl: true,
+        oauthAvatarUrl: true,
+        avatarSource: true,
+        mmr: true,
+        createdAt: true,
     },
   });
 }
@@ -524,6 +527,102 @@ async function handle42Start(req, res) {
   return redirect(res, authorizeUrl.toString());
 }
 
+async function saveOAuthAvatar(userId, avatarUrl)
+{
+  if (!avatarUrl)
+    return false;
+
+  try
+  {
+    const response = await fetch(avatarUrl);
+
+    if (!response.ok)
+    {
+      console.error(
+        `Failed to download 42 avatar: HTTP ${response.status}`
+      );
+
+      return false;
+    }
+
+    const contentType =
+      response.headers.get('content-type') || '';
+
+    let extension = null;
+
+    if (contentType.includes('image/jpeg'))
+      extension = 'jpg';
+    else if (contentType.includes('image/png'))
+      extension = 'png';
+    else if (contentType.includes('image/webp'))
+      extension = 'webp';
+
+    if (!extension)
+    {
+      console.error(
+        `Unsupported 42 avatar content type: ${contentType}`
+      );
+
+      return false;
+    }
+
+    const imageBuffer =
+      Buffer.from(await response.arrayBuffer());
+
+    if (imageBuffer.length > 2 * 1024 * 1024)
+    {
+      console.error('42 avatar is larger than 2 MB');
+      return false;
+    }
+
+    const extensions = ['png', 'jpg', 'webp'];
+
+    for (const oldExtension of extensions)
+    {
+      if (oldExtension === extension)
+        continue;
+
+      const oldPath =
+        path.join(
+          avatarDirectory,
+          `${userId}.${oldExtension}`
+        );
+
+      try
+      {
+        await fs.promises.unlink(oldPath);
+      }
+      catch (error)
+      {
+        if (error.code !== 'ENOENT')
+          throw error;
+      }
+    }
+
+    const filePath =
+      path.join(
+        avatarDirectory,
+        `${userId}.${extension}`
+      );
+
+    await fs.promises.writeFile(
+      filePath,
+      imageBuffer
+    );
+
+    return true;
+  }
+  catch (error)
+  {
+    console.error(
+      'Failed to save 42 avatar:',
+      error
+    );
+
+    return false;
+  }
+}
+
 async function handle42Callback(req, res) {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const code = url.searchParams.get('code');
@@ -595,28 +694,60 @@ async function handle42Callback(req, res) {
     let user;
     let isNewUser = false;
 
-    if (existingUser) {
+    if (existingUser)
+    {
+      const hasLocalAvatar = existingUser.avatarUrl && existingUser.avatarUrl.startsWith('/api/me/avatar');
       user = await prisma.user.update({
-        where: { id: existingUser.id },
-        data: {
+        where: {id: existingUser.id,},
+        data: 
+        {
           oauth42Id,
           email,
           username,
           oauthAvatarUrl,
-          // Keep a locally uploaded avatar if the user already has one.
+          avatarUrl:
+            hasLocalAvatar ? existingUser.avatarUrl : null,
         },
       });
-    } else {
-      user = await prisma.user.create({
-        data: {
+
+      if (!hasLocalAvatar)
+      {
+        const avatarSaved = await saveOAuthAvatar(existingUser.id, oauthAvatarUrl);
+
+        if (avatarSaved)
+        {
+          user = await prisma.user.update(
+          {
+            where: {id: existingUser.id,},
+            data: {avatarUrl: '/api/me/avatar',},
+          });
+        }
+      }
+  }
+    else 
+    {
+      user = await prisma.user.create(
+      {
+        data: 
+        {
           oauth42Id,
           email,
           username,
-          avatarUrl: oauthAvatarUrl,
+          avatarUrl: null,
           oauthAvatarUrl,
-          passwordHash: hashPassword(crypto.randomBytes(16).toString('hex')),
+          passwordHash: hashPassword(crypto.randomBytes(16).toString('hex')
+          ),
         },
       });
+      const avatarSaved = await saveOAuthAvatar(user.id, oauthAvatarUrl);
+      if (avatarSaved)
+      {
+        user = await prisma.user.update(
+        {
+          where: {id: user.id,},
+          data: {avatarUrl: '/api/me/avatar',},
+        });
+      }
       isNewUser = true;
     }
 
@@ -687,133 +818,139 @@ async function handleAvatar(req, res) {
   res.end('Avatar not found');
 }
 
-async function handleAvatarDelete(req, res) {
+async function handleAvatarDelete(req, res)
+{
   const user = await getCurrentUser(req);
-
-  if (!user) {
-    return sendJson(res, 401, {
-      error: 'Not authenticated',
-    });
+  if (!user)
+  {
+    return sendJson(res, 401, {error: 'Not authenticated',});
   }
-
   const extensions = ['png', 'jpg', 'webp'];
-
-  try {
-    for (const extension of extensions) {
-      const filePath = path.join(
-        avatarDirectory,
-        `${user.id}.${extension}`,
-      );
-
-      try {
+  try
+  {
+    for (const extension of extensions)
+    {
+      const filePath = path.join(avatarDirectory,`${user.id}.${extension}`);
+      try
+      {
         await fs.promises.unlink(filePath);
-      } catch (error) {
-        if (error.code !== 'ENOENT') {
-          throw error;
-        }
+      }
+      catch (error)
+      {
+         if (error.code !== 'ENOENT')
+            throw error;
       }
     }
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        avatarUrl: user.oauthAvatarUrl || null,
-      },
+    if (user.oauthAvatarUrl)
+    {
+      const avatarSaved = await saveOAuthAvatar(user.id, user.oauthAvatarUrl);
+      if (avatarSaved)
+      {
+        await prisma.user.update(
+        {
+          where: {id: user.id,},
+          data: {avatarUrl: '/api/me/avatar', avatarSource: 'oauth',},
+        });
+        return sendJson(res, 200, 
+        {
+          message: 'Profile picture deleted successfully',
+          avatarUrl: '/api/me/avatar',
+          avatarSource:'oauth',
+        });
+      }
+    }
+    await prisma.user.update(
+    {
+      where: {id: user.id,},
+      data: {avatarUrl: null, avatarSource: null,},
     });
-
-    return sendJson(res, 200, {
-      message: 'Avatar deleted successfully',
-      avatarUrl: user.oauthAvatarUrl || null,
+    return sendJson(res, 200, 
+    {
+      message:'Profile picture deleted successfully',
+      avatarUrl: null,
+      avatarSource: null,
     });
-  } catch (error) {
+  }
+  catch (error)
+  {
     console.error('Failed to delete avatar:', error);
-    return sendJson(res, 500, {
-      error: 'Could not delete avatar',
-    });
+    return sendJson(res, 500, { error: 'Could not delete avatar',});
   }
 }
 
-async function handleAvatarUpload(req, res) {
+async function handleAvatarUpload(req, res)
+{
   const user = await getCurrentUser(req);
-
-  if (!user) {
-    return sendJson(res, 401, { error: 'Not authenticated' });
+  if (!user)
+  {
+    return sendJson(res, 401, {error: 'Not authenticated',});
   }
-
   let payload;
-
-  try {
+  try
+  {
     payload = JSON.parse(await readBody(req) || '{}');
-  } catch (error) {
-    return sendJson(res, 400, { error: 'Invalid JSON payload' });
   }
-
+  catch (error)
+  {
+    return sendJson(res, 400, {error: 'Invalid JSON payload',});
+  }
   const image = String(payload.image || '');
-  const match = image.match(
-    /^data:(image\/(?:png|jpeg|webp));base64,(.+)$/,
-  );
-
-  if (!match) {
-    return sendJson(res, 400, { error: 'Invalid image format' });
+  const match = image.match(/^data:(image\/(?:png|jpeg|webp));base64,(.+)$/);
+  if (!match)
+  {
+    return sendJson(res, 400, {error: 'Invalid image format',});
   }
-
   const mimeType = match[1];
   const base64Data = match[2];
-  const imageBuffer = Buffer.from(base64Data, 'base64');
-
-  if (imageBuffer.length > 2 * 1024 * 1024) {
-    return sendJson(res, 400, {
-      error: 'Image must be smaller than 2 MB',
-    });
+  const imageBuffer = Buffer.from( base64Data,'base64');
+  if (imageBuffer.length > 2 * 1024 * 1024)
+  {
+    return sendJson(res, 400, { error: 'Image must be smaller than 2 MB',});
   }
-
   let extension = 'webp';
-
-  if (mimeType === 'image/png') {
+  if (mimeType === 'image/png')
+  {
     extension = 'png';
-  } else if (mimeType === 'image/jpeg') {
+  }
+  else if (mimeType === 'image/jpeg')
+  {
     extension = 'jpg';
   }
-
   const extensions = ['png', 'jpg', 'webp'];
-
-  try {
-    for (const oldExtension of extensions) {
-      const oldPath = path.join(
-        avatarDirectory,
-        `${user.id}.${oldExtension}`,
-      );
-
-      try {
+  try
+  {
+    for (const oldExtension of extensions)
+    {
+      const oldPath = path.join( avatarDirectory, `${user.id}.${oldExtension}`);
+      try
+      {
         await fs.promises.unlink(oldPath);
-      } catch (error) {
-        if (error.code !== 'ENOENT') {
+      }
+      catch (error)
+      {
+        if (error.code !== 'ENOENT')
           throw error;
-        }
       }
     }
-
-    const filePath = path.join(
-      avatarDirectory,
-      `${user.id}.${extension}`,
-    );
-
+    const filePath = path.join(avatarDirectory,`${user.id}.${extension}`);
     await fs.promises.writeFile(filePath, imageBuffer);
-
     const avatarUrl = '/api/me/avatar';
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { avatarUrl },
+    await prisma.user.update(
+    {
+      where: {id: user.id,},
+      data: {avatarUrl, avatarSource: 'custom',},
     });
-
-    return sendJson(res, 200, {
+    return sendJson(res, 200, 
+    {
       message: 'Avatar updated successfully',
       avatarUrl,
+      avatarSource:'custom',
     });
-  } catch (error) {
+  }
+  catch (error)
+  {
     console.error('Failed to save avatar:', error);
-    return sendJson(res, 500, { error: 'Could not save avatar' });
+    return sendJson(res, 500, {error: 'Could not save avatar',});
   }
 }
 

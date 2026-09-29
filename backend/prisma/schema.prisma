@@ -14,6 +14,7 @@ model User {
   username     String?  @unique
   avatarUrl    String?
   oauthAvatarUrl String?
+  avatarSource String?
   passwordHash String
   mmr          Int      @default(0)
   createdAt    DateTime @default(now())

@@ -24,10 +24,10 @@ services:
     restart: unless-stopped
     environment:
       PORT: 3000
-      FRONTEND_URL: http://localhost:8080
+      FRONTEND_URL: ${FRONTEND_URL:-https://localhost:8443}
       INTRA_CLIENT_ID: ${INTRA_CLIENT_ID:-}
       INTRA_CLIENT_SECRET: ${INTRA_CLIENT_SECRET:-}
-      INTRA_REDIRECT_URI: ${INTRA_REDIRECT_URI:-http://localhost:8080/api/auth/42/callback}
+      INTRA_REDIRECT_URI: ${INTRA_REDIRECT_URI:-https://localhost:8443/api/auth/42/callback}
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       POSTGRES_USER: ${POSTGRES_USER:-transcendence}
@@ -49,6 +49,9 @@ services:
     restart: unless-stopped
     ports:
       - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./certs:/etc/nginx/certs:ro
     depends_on:
       - backend
 

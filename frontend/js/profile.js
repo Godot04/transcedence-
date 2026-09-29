@@ -31,9 +31,9 @@ const ranks = [
     { name: 'Commander', mmr: 2000 },
 ];
 
-function updateAvatarState(hasAvatar)
+function updateAvatarState(hasCustomAvatar)
 {
-    avatarButton.classList.toggle('has-avatar', hasAvatar);
+    avatarButton.classList.toggle('has-custom-avatar', hasCustomAvatar);
 }
 
 function readFileAsDataURL(file)
@@ -152,18 +152,17 @@ deleteAvatarButton.addEventListener('click', async (event) =>
 
         if (data.avatarUrl)
         {
-            avatarElement.src =
-                `${data.avatarUrl}?t=${Date.now()}`;
-
+            avatarElement.src = `${data.avatarUrl}?t=${Date.now()}`;
             avatarElement.classList.add('visible');
             avatarPlaceholder.classList.add('hidden');
+            updateAvatarState(data.avatarSource === 'custom');
         }
         else
         {
             avatarElement.removeAttribute('src');
             avatarElement.classList.remove('visible');
-
             avatarPlaceholder.classList.remove('hidden');
+            updateAvatarState(false);
         }
     }
     catch (error)
@@ -365,7 +364,7 @@ async function loadProfile()
             avatarElement.src = `${user.avatarUrl}?t=${Date.now()}`;
             avatarElement.classList.add('visible');
             avatarPlaceholder.classList.add('hidden');
-            updateAvatarState(true);
+            updateAvatarState(user.avatarSource === 'custom');
         }
         else
         {
