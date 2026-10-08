@@ -1,0 +1,72 @@
+@media (max-width: 600px) 
+{
+
+    body 
+    {
+        padding: 20px 12px;
+    }
+
+    body::before 
+    {
+        left: 20px;
+    }
+
+    .auth-card 
+    {
+        padding: 30px 25px;
+    }
+
+    .auth-card::before 
+    {
+        left: 25px;
+    }
+
+    h1 
+    {
+        font-size: 2.4rem;
+    }
+
+    .profile-card 
+    {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .site-header 
+    {
+        align-items: flex-start;
+    }
+
+    .site-header h1 
+    {
+        font-size: 2rem;
+    }
+
+    .info-row 
+    {
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .profile-view-header 
+    {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-description-heading 
+    {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .profile-description-actions 
+    {
+        width: 100%;
+    }
+
+    .description-action-button 
+    {
+        flex: 1;
+    }
+}

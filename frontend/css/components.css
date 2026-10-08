@@ -1,0 +1,163 @@
+.primary-button,
+.oauth-button,
+.logout-button 
+{
+    border: 2px solid var(--ink);
+    padding: 12px 18px;
+    margin-top: 18px;
+    background: var(--paper);
+    color: var(--ink-dark);
+    font-weight: bold;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition:
+        transform 0.1s ease,
+        box-shadow 0.1s ease;
+}
+
+.primary-button:hover,
+.oauth-button:hover,
+.logout-button:hover 
+{
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0 var(--ink);
+    color: var(--red);
+}
+
+.primary-button:active,
+.oauth-button:active,
+.logout-button:active 
+{
+    transform: translate(3px, 3px);
+    box-shadow: none;
+}
+
+.oauth-button 
+{
+    width: 100%;
+    border-color: var(--red);
+    color: var(--red-dark);
+    box-shadow: 3px 3px 0 var(--red);
+}
+
+.oauth-button:hover 
+{
+    box-shadow: 1px 1px 0 var(--red);
+}
+
+.secondary-button 
+{
+    margin-top: 12px;
+    padding: 9px 14px;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    font-weight: bold;
+    box-shadow: 2px 2px 0 var(--ink);
+}
+
+.secondary-button:hover 
+{
+    color: var(--red);
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--ink);
+}
+
+/* Modals */
+
+.modal 
+{
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(30, 30, 30, 0.45);
+    z-index: 100;
+}
+
+.modal.hidden 
+{
+    display: none;
+}
+
+.modal-card 
+{
+    position: relative;
+    width: min(550px, 100%);
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 35px;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 31px,
+            rgba(80, 150, 210, 0.14) 32px
+        );
+    background-color: var(--paper);
+    border: 2px solid var(--ink);
+    box-shadow: 7px 7px 0 rgba(41, 36, 143, 0.25);
+    transform: rotate(-0.3deg);
+}
+
+.modal-card h2 
+{
+    margin-top: 0;
+    font-size: 2rem;
+}
+
+.modal-close 
+{
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    border: none;
+    background: transparent;
+    color: var(--red);
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+/* Footer */
+
+.site-footer 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 30px 0 20px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.site-footer a 
+{
+    color: var(--ink);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.site-footer a:hover 
+{
+    color: var(--red);
+}
+
+/* Legal navigation */
+
+.page-back-link 
+{
+    border: none;
+    padding: 0;
+    background: transparent;
+    color: var(--red);
+    font: inherit;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.page-back-link:hover 
+{
+    color: var(--red-dark);
+    text-decoration: underline;
+}

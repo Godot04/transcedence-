@@ -7,7 +7,7 @@ COPY prisma ./prisma
 
 RUN npm install
 
-COPY server.js ./
+COPY *.js ./
 
 EXPOSE 3000
 
