@@ -11,7 +11,7 @@
         fetch('/api/me')
             .then((response) => {
                 window.location.href = response.ok
-                    ? '/profile.html'
+                    ? '/main_page.html'
                     : '/login.html';
             })
             .catch(() => {

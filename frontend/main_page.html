@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Battleship Transcendence</title>
+
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/main_page.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+  </head>
+  <body>
+    <main class="home-container">
+      <header class="home-header">
+        <div>
+          <p class="eyebrow">FT_TRANSCENDENCE</p>
+          <h1>Battleship</h1>
+        </div>
+
+        <div class="home-header-actions">
+          <button class="secondary-button" id="logout-button" type="button">
+            Log out
+          </button>
+        </div>
+      </header>
+
+      <div class="home-layout">
+        <section class="home-card search-card" aria-labelledby="search-title">
+          <div class="card-heading">
+            <div>
+              <h2 id="search-title">MATCHMAKING</h2>
+            </div>
+          </div>
+
+          <div class="search-options">
+            <button
+              class="search-mode-button classic"
+              type="button"
+              data-mode="classic"
+            >
+              <span class="search-mode-title"> Classic Search </span>
+
+              <span class="search-mode-description">
+                Standard Battleship rules and matchmaking.
+              </span>
+            </button>
+
+            <button
+              class="search-mode-button enhanced"
+              type="button"
+              data-mode="enhanced"
+            >
+              <span class="search-mode-title"> Enhanced Search </span>
+
+              <span class="search-mode-description">
+                Advanced rules and variations.
+              </span>
+
+              <span class="search-mode-note">
+                Enhanced rules will be added later.
+              </span>
+            </button>
+          </div>
+
+          <div
+            class="search-progress hidden"
+            id="search-progress"
+            aria-live="polite"
+          >
+            <div class="search-progress-header">
+              <strong id="search-progress-title"> Searching... </strong>
+
+              <span id="search-progress-mode"> Classic </span>
+            </div>
+
+            <p id="search-progress-text">
+              The matchmaking interface is ready. The server-side game queue
+              will be connected here next.
+            </p>
+
+            <button class="text-button" id="cancel-search-button" type="button">
+              Cancel search
+            </button>
+          </div>
+        </section>
+
+        <aside class="home-sidebar">
+          <section class="home-card account-summary">
+            <a
+              class="home-avatar-link"
+              href="/profile.html"
+              aria-label="Open your profile"
+            >
+              <img
+                id="home-avatar"
+                src="/icons/avatar-placeholder.png"
+                alt="Your profile picture"
+              />
+            </a>
+
+            <div class="account-summary-info">
+              <p class="section-label" id="home-rank">Recruit</p>
+              <h2 id="home-username">Loading...</h2>
+
+              <div class="account-stat-row">
+                <span>MMR</span>
+                <strong id="home-mmr">0</strong>
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="home-card friends-card"
+            aria-labelledby="friends-title"
+          >
+            <div class="friends-heading">
+              <div>
+                <!-- <p class="section-label">SOCIAL</p> -->
+                <h2 id="friends-title">Friends</h2>
+              </div>
+
+              <span class="friends-online-count" id="friends-online-count">
+                0 online
+              </span>
+            </div>
+
+            <div id="friends-list" class="friends-list">
+              <div class="friends-empty">
+                <span class="friends-empty-icon" aria-hidden="true"> + </span>
+                <strong>No friends yet</strong>
+                <p>Your friends will appear here with their online status.</p>
+              </div>
+            </div>
+
+            <button
+              class="secondary-button full-width"
+              id="friends-button"
+              type="button"
+              disabled
+            >
+              Friends — coming soon
+            </button>
+          </section>
+        </aside>
+      </div>
+    </main>
+
+    <script src="/js/main_page.js?v=3"></script>
+  </body>
+</html>

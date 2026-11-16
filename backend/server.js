@@ -1,9 +1,10 @@
-const http = require('http');
-const prisma = require('./db');
-const config = require('./config');
-const {sendJson} = require('./http');
-const 
-{
+const http = require("http");
+const { WebSocketServer } = require("ws");
+const prisma = require("./db");
+const config = require("./config");
+const { createGameService } = require("./game");
+const { sendJson } = require("./http");
+const {
   handleRegister,
   handleLogin,
   handleLogout,
@@ -11,14 +12,13 @@ const
   handle42Start,
   handle42Callback,
   requireCurrentUser,
-} = require('./auth');
+} = require("./auth");
 
-const 
-{
+const {
   initializeAchievements,
   handleMyAchievements,
   handleAllAchievements,
-} = require('./achievements');
+} = require("./achievements");
 
 const {
   handleAvatarUpload,
@@ -28,130 +28,113 @@ const {
   handleDescriptionUpload,
   handleDescriptionDelete,
   handlePublicProfile,
-} = require('./profile');
+} = require("./profile");
 
-async function requestHandler(req, res) 
-{
+async function requestHandler(req, res) {
   const url = new URL(req.url, config.frontendUrl);
 
-  if (req.method === 'DELETE' && url.pathname === '/api/me/avatar')
-  {
+  if (req.method === "DELETE" && url.pathname === "/api/me/avatar") {
     const user = await requireCurrentUser(req, res);
-    if (!user)
-      return;
+    if (!user) return;
     return handleAvatarDelete(req, res, user);
   }
 
-  if (req.method === 'GET' && url.pathname === '/api/health') 
-  {
-    return sendJson(res, 200, 
-    {
-      status: 'ok',
-      service: 'backend',
-      port: config.port, 
+  if (req.method === "GET" && url.pathname === "/api/health") {
+    return sendJson(res, 200, {
+      status: "ok",
+      service: "backend",
+      port: config.port,
       timestamp: new Date().toISOString(),
     });
   }
 
-  if (req.method === 'GET' && url.pathname === '/api') {
+  if (req.method === "GET" && url.pathname === "/api") {
     return sendJson(res, 200, {
-      message: 'Transcendence backend is running',
+      message: "Transcendence backend is running",
       endpoints: [
-        '/api/health',
-        '/api/register',
-        '/api/login',
-        '/api/me',
-        '/api/logout',
-        '/api/me/achievements',
-        '/api/achievements',
-        '/api/me/avatar',
-        '/api/auth/42/start',
-        '/api/auth/42/callback',
+        "/api/health",
+        "/api/register",
+        "/api/login",
+        "/api/me",
+        "/api/logout",
+        "/api/me/achievements",
+        "/api/achievements",
+        "/api/me/avatar",
+        "/api/auth/42/start",
+        "/api/auth/42/callback",
       ],
     });
   }
 
-  const publicProfileMatch = url.pathname.match(/^\/api\/users\/(\d+)\/profile$/);
-  if (req.method === 'GET' && publicProfileMatch) 
-  {
+  const publicProfileMatch = url.pathname.match(
+    /^\/api\/users\/(\d+)\/profile$/,
+  );
+  if (req.method === "GET" && publicProfileMatch) {
     const userId = Number(publicProfileMatch[1]);
     return handlePublicProfile(req, res, userId);
   }
-  
+
   const publicAvatarMatch = url.pathname.match(/^\/api\/users\/(\d+)\/avatar$/);
-  if (req.method === 'GET' && publicAvatarMatch) 
-  {
+  if (req.method === "GET" && publicAvatarMatch) {
     const userId = Number(publicAvatarMatch[1]);
     return handlePublicAvatar(req, res, userId);
   }
 
-  if (req.method === 'POST' && url.pathname === '/api/register')
+  if (req.method === "POST" && url.pathname === "/api/register")
     return handleRegister(req, res);
 
-  if (req.method === 'POST' && url.pathname === '/api/login')
+  if (req.method === "POST" && url.pathname === "/api/login")
     return handleLogin(req, res);
 
-  if (req.method === 'GET' && url.pathname === '/api/me')
+  if (req.method === "GET" && url.pathname === "/api/me")
     return handleMe(req, res);
 
-  if (req.method === 'POST' && url.pathname === '/api/logout')
+  if (req.method === "POST" && url.pathname === "/api/logout")
     return handleLogout(req, res);
 
-  if (req.method === 'GET' && url.pathname === '/api/me/achievements')
-  {
+  if (req.method === "GET" && url.pathname === "/api/me/achievements") {
     const user = await requireCurrentUser(req, res);
-    if (!user)
-        return;
+    if (!user) return;
     return handleMyAchievements(req, res, user);
   }
 
-  if (req.method === 'GET' && url.pathname === '/api/achievements')
-  {
+  if (req.method === "GET" && url.pathname === "/api/achievements") {
     const user = await requireCurrentUser(req, res);
-    if (!user)
-      return;
+    if (!user) return;
     return handleAllAchievements(req, res, user);
   }
 
-  if (req.method === 'POST' && url.pathname === '/api/me/avatar')
-  {
+  if (req.method === "POST" && url.pathname === "/api/me/avatar") {
     const user = await requireCurrentUser(req, res);
-    if (!user)
-        return;
+    if (!user) return;
     return handleAvatarUpload(req, res, user);
   }
 
-  if (req.method === 'GET' && url.pathname === '/api/me/avatar')
-  {
+  if (req.method === "GET" && url.pathname === "/api/me/avatar") {
     const user = await requireCurrentUser(req, res);
-    if (!user)
-        return;
+    if (!user) return;
     return handleAvatar(req, res, user);
   }
 
-  if (req.method === 'GET' && url.pathname === '/api/auth/42/start')
+  if (req.method === "GET" && url.pathname === "/api/auth/42/start")
     return handle42Start(req, res);
 
-  if (req.method === 'GET' && url.pathname === '/api/auth/42/callback')
+  if (req.method === "GET" && url.pathname === "/api/auth/42/callback")
     return handle42Callback(req, res);
 
-  if (req.method === 'POST' && url.pathname === '/api/me/description')
-  {
+  if (req.method === "POST" && url.pathname === "/api/me/description") {
     const user = await requireCurrentUser(req, res);
-    if (!user)
-      return;
+    if (!user) return;
     return handleDescriptionUpload(req, res, user);
   }
 
-  if (req.method === 'DELETE' && url.pathname === '/api/me/description')
-  {
+  if (req.method === "DELETE" && url.pathname === "/api/me/description") {
     const user = await requireCurrentUser(req, res);
-    if (!user)
-      return;
+    if (!user) return;
     return handleDescriptionDelete(req, res, user);
   }
 
-  return sendJson(res, 404, { error: 'Not found' });
+  return sendJson(res, 404, { error: "Not found" });
 }
 
 async function main() {
@@ -161,12 +144,28 @@ async function main() {
 
     const server = http.createServer((req, res) => {
       requestHandler(req, res).catch((error) => {
-        console.error('Unexpected request error:', error);
-        sendJson(res, 500, { error: 'Internal server error' });
+        console.error("Unexpected request error:", error);
+        sendJson(res, 500, { error: "Internal server error" });
       });
     });
 
-    server.listen(config.port, '0.0.0.0', () => {
+    const gameService = createGameService();
+    const webSocketServer = new WebSocketServer({ noServer: true });
+
+    server.on("upgrade", (req, socket, head) => {
+      const url = new URL(req.url, config.frontendUrl);
+
+      if (url.pathname !== "/ws/game") {
+        socket.destroy();
+        return;
+      }
+
+      webSocketServer.handleUpgrade(req, socket, head, (webSocket) => {
+        gameService.handleConnection(webSocket, req);
+      });
+    });
+
+    server.listen(config.port, "0.0.0.0", () => {
       console.log(`Backend listening on port ${config.port}`);
     });
 
@@ -175,10 +174,10 @@ async function main() {
       process.exit(0);
     };
 
-    process.on('SIGINT', shutdown);
-    process.on('SIGTERM', shutdown);
+    process.on("SIGINT", shutdown);
+    process.on("SIGTERM", shutdown);
   } catch (error) {
-    console.error('Failed to start backend:', error);
+    console.error("Failed to start backend:", error);
     process.exit(1);
   }
 }

@@ -300,7 +300,13 @@
 }
 
 .rank-row strong {
+  grid-column: 2;
   color: #777;
+}
+
+.rank-row > span {
+  grid-column: 3;
+  white-space: nowrap;
 }
 
 .rank-row.current strong {

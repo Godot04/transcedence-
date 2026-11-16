@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f7f2" />
+    <title>Battle — Battleship Transcendence</title>
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/game.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+  </head>
+  <body>
+    <main class="game-container">
+      <header class="game-header">
+        <div>
+          <p class="game-eyebrow">BATTLESHIP TRANSCENDENCE / CLASSIC</p>
+          <h1>Battle stations</h1>
+          <p class="game-subtitle" id="game-subtitle">
+            Connecting to your match…
+          </p>
+        </div>
+        <button class="secondary-button" id="leave-game-button" type="button">
+          Leave match
+        </button>
+      </header>
+
+      <section
+        class="battle-layout"
+        id="battle-layout"
+        hidden
+        aria-label="Battle boards"
+      >
+        <article class="board-panel paper-panel own-board-panel">
+          <div class="board-player-info">
+            <div class="player-identity">
+              <img
+                id="my-avatar"
+                src="/icons/avatar-placeholder.png"
+                alt="Your avatar"
+              />
+              <div class="player-copy">
+                <p class="game-eyebrow fleet-label own-fleet-label">
+                  YOUR FLEET
+                </p>
+                <h2 id="my-name">You</h2>
+                <span class="player-mmr" id="my-mmr">0 MMR</span>
+                <span class="player-rank" id="my-rank">Recruit</span>
+              </div>
+            </div>
+            <div class="board-player-actions">
+              <button
+                class="primary-button ready-button"
+                id="ready-fleet-button"
+                type="button"
+                disabled
+              >
+                Ready for battle
+              </button>
+            </div>
+          </div>
+          <div class="board-layout">
+            <span class="board-corner" aria-hidden="true"></span>
+            <div class="column-labels" aria-hidden="true"></div>
+            <div class="row-labels" aria-hidden="true"></div>
+            <div
+              class="battle-grid own-grid"
+              id="own-grid"
+              aria-label="Your fleet board"
+            ></div>
+          </div>
+          <section class="placement-panel" id="placement-panel" hidden>
+            <div class="ship-list" id="ship-list" aria-label="Your ships"></div>
+
+            <div class="placement-footer">
+              <div class="placement-actions">
+                <button
+                  class="secondary-button"
+                  id="randomize-fleet-button"
+                  type="button"
+                >
+                  Randomize fleet
+                </button>
+              </div>
+              <span class="phase-chip" id="fleet-progress">0 / 5</span>
+            </div>
+          </section>
+        </article>
+
+        <article class="board-panel paper-panel target-panel">
+          <div class="board-player-info">
+            <div class="player-identity">
+              <img
+                id="opponent-avatar"
+                src="/icons/avatar-placeholder.png"
+                alt="Opponent avatar"
+              />
+              <div class="player-copy">
+                <p class="game-eyebrow fleet-label">TARGETING BOARD</p>
+                <h2 id="opponent-name">Opponent</h2>
+                <span class="player-mmr" id="opponent-mmr">0 MMR</span>
+                <span class="player-rank" id="opponent-rank">Recruit</span>
+              </div>
+            </div>
+            <div class="opponent-status-area">
+              <div
+                class="disconnect-countdown"
+                id="opponent-disconnect-countdown"
+                role="status"
+                aria-live="polite"
+                hidden
+              >
+                <span>Reconnect time remaining</span>
+                <strong><span id="opponent-countdown-value">30</span>s</strong>
+              </div>
+            </div>
+            <span
+              class="board-badge opponent-badge status-not-ready"
+              id="opponent-status"
+              >Waiting</span
+            >
+          </div>
+          <div class="board-layout">
+            <span class="board-corner" aria-hidden="true"></span>
+            <div class="column-labels" aria-hidden="true"></div>
+            <div class="row-labels" aria-hidden="true"></div>
+            <div
+              class="battle-grid target-grid"
+              id="target-grid"
+              aria-label="Opponent targeting board"
+            ></div>
+          </div>
+        </article>
+      </section>
+
+      <section
+        class="game-message paper-panel"
+        id="game-message-panel"
+        aria-live="polite"
+      >
+        <span class="message-marker" aria-hidden="true">✦</span>
+        <div>
+          <strong id="game-message-title">Connecting…</strong>
+          <p id="game-message-text">
+            Restoring your secure connection to the match.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <div class="result-overlay" id="result-overlay" hidden>
+      <section
+        class="result-dialog paper-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="result-title"
+        aria-describedby="result-text"
+      >
+        <p class="game-eyebrow">MATCH COMPLETE</p>
+        <div class="result-emblem" id="result-emblem" aria-hidden="true">✦</div>
+        <h2 id="result-title">Victory!</h2>
+        <p id="result-text">You destroyed the enemy fleet.</p>
+        <div class="mmr-result">
+          <span class="mmr-label">RATING CHANGE</span>
+          <strong id="result-mmr-change">+25 MMR</strong>
+          <span id="result-new-mmr">New MMR: 25</span>
+        </div>
+        <a
+          class="primary-button button-link"
+          id="return-lobby-button"
+          href="/main_page.html"
+          >Return to main menu</a
+        >
+      </section>
+    </div>
+
+    <script src="/js/game.js"></script>
+  </body>
+</html>

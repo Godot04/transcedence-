@@ -229,7 +229,7 @@ async function handle42Callback(req, res) {
     setSessionCookie(res, signSessionToken(user.id));
     clearOAuthStateCookie(res);
 
-    return redirect(res, `${config.frontendUrl}/profile.html?auth=42-success`);
+    return redirect(res, `${config.frontendUrl}/main_page.html?auth=42-success`);
   } catch (error) {
     console.error("42 OAuth failed:", error);
     clearOAuthStateCookie(res);
